@@ -48,9 +48,14 @@ const AdminDashboard: React.FC = () => {
           <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
           <p className="text-muted text-lg">Manage your products and inventory</p>
         </div>
-        <Link to="/admin/add-product" className="btn btn-primary py-3 px-6">
-          <Plus size={20} /> Add New Product
-        </Link>
+        <div className="flex gap-4">
+          <Link to="/admin/categories" className="btn btn-outline py-3 px-6">
+            Manage Categories
+          </Link>
+          <Link to="/admin/add-product" className="btn btn-primary py-3 px-6">
+            <Plus size={20} /> Add New Product
+          </Link>
+        </div>
       </div>
 
       <div className="card overflow-hidden">

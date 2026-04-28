@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AddProduct from './pages/Admin/AddProduct';
+import CategoriesManagement from './pages/Admin/CategoriesManagement';
 
 const App: React.FC = () => {
   return (
@@ -46,6 +47,11 @@ const App: React.FC = () => {
               <Route path="/admin/add-product" element={
                 <ProtectedRoute adminOnly>
                   <AddProduct />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/categories" element={
+                <ProtectedRoute adminOnly>
+                  <CategoriesManagement />
                 </ProtectedRoute>
               } />
               <Route path="/admin/edit-product/:id" element={
