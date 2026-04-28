@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import api from '../../api/axios';
-import { Upload, ArrowLeft, Save } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Upload, ArrowLeft, Save, Info, Package, DollarSign, Layers } from 'lucide-react';
 
 const AddProduct: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -89,70 +88,118 @@ const AddProduct: React.FC = () => {
   };
 
   return (
-    <div className="container py-10">
-      <Link to="/admin" className="flex items-center gap-2 text-muted hover:text-primary transition mb-6">
-        <ArrowLeft size={18} /> Back to Dashboard
+    <div className="container py-12 animate-fade-in">
+      <Link to="/admin" className="flex items-center gap-2 text-muted hover:text-primary transition mb-8 font-medium">
+        <ArrowLeft size={20} /> Back to Inventory
       </Link>
 
-      <div className="flex justify-between items-end mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
         <div>
-          <h1 className="text-4xl font-bold">{isEdit ? 'Edit Product' : 'Add New Product'}</h1>
-          <p className="text-muted mt-2">Fill in the details for your product listing</p>
+          <h1 className="text-4xl font-black tracking-tight">{isEdit ? 'Edit Product' : 'Create Product'}</h1>
+          <p className="text-muted font-medium mt-2">Provide the necessary details to {isEdit ? 'update' : 'publish'} your product</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2">
-          <form id="product-form" onSubmit={handleSubmit} className="card space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">Product Name</label>
-                <input 
-                  name="name"
-                  type="text" 
-                  required 
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full bg-slate-800 border border-border rounded-lg p-3 outline-none focus:border-primary transition"
-                  placeholder="e.g. Wireless Noise Cancelling Headphones"
-                />
+          <form id="product-form" onSubmit={handleSubmit} className="space-y-8">
+            {/* General Info Card */}
+            <div className="card p-8 space-y-6">
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+                <Info size={20} />
+                <h3 className="font-bold uppercase tracking-widest text-xs">General Information</h3>
               </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-muted ml-1">Product Name</label>
+                  <div className="relative">
+                    <input 
+                      name="name"
+                      type="text" 
+                      required 
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full bg-main border border-border px-4 py-3 rounded-xl focus:border-primary transition pl-12"
+                      placeholder="e.g. Ultra-High Performance Headphones"
+                    />
+                    <Package size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+                  </div>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Price ($)</label>
-                <input 
-                  name="price"
-                  type="number" 
-                  step="0.01"
-                  required 
-                  value={formData.price}
-                  onChange={handleChange}
-                  className="w-full bg-slate-800 border border-border rounded-lg p-3 outline-none focus:border-primary transition"
-                  placeholder="0.00"
-                />
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-muted ml-1">Full Description</label>
+                  <textarea 
+                    name="description"
+                    required 
+                    rows={8}
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full bg-main border border-border px-4 py-3 rounded-xl focus:border-primary transition resize-none"
+                    placeholder="Describe the product's key features, specifications, and benefits..."
+                  />
+                </div>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Stock Quantity</label>
-                <input 
-                  name="stock"
-                  type="number" 
-                  required 
-                  value={formData.stock}
-                  onChange={handleChange}
-                  className="w-full bg-slate-800 border border-border rounded-lg p-3 outline-none focus:border-primary transition"
-                  placeholder="0"
-                />
+            {/* Pricing & Stock Card */}
+            <div className="card p-8 space-y-6">
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+                <DollarSign size={20} />
+                <h3 className="font-bold uppercase tracking-widest text-xs">Pricing & Inventory</h3>
               </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-muted ml-1">Base Price ($)</label>
+                  <div className="relative">
+                    <input 
+                      name="price"
+                      type="number" 
+                      step="0.01"
+                      required 
+                      value={formData.price}
+                      onChange={handleChange}
+                      className="w-full bg-main border border-border px-4 py-3 rounded-xl focus:border-primary transition pl-12"
+                      placeholder="0.00"
+                    />
+                    <DollarSign size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+                  </div>
+                </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">Category</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-muted ml-1">Stock Quantity</label>
+                  <div className="relative">
+                    <input 
+                      name="stock"
+                      type="number" 
+                      required 
+                      value={formData.stock}
+                      onChange={handleChange}
+                      className="w-full bg-main border border-border px-4 py-3 rounded-xl focus:border-primary transition pl-12"
+                      placeholder="0"
+                    />
+                    <Layers size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Classification Card */}
+            <div className="card p-8 space-y-6">
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+                <Info size={20} />
+                <h3 className="font-bold uppercase tracking-widest text-xs">Classification</h3>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-muted ml-1">Category</label>
                 <select 
                   name="category_id"
                   required 
                   value={formData.category_id}
                   onChange={handleChange}
-                  className="w-full bg-slate-800 border border-border rounded-lg p-3 outline-none focus:border-primary transition appearance-none"
+                  className="w-full bg-main border border-border px-4 py-3 rounded-xl focus:border-primary transition appearance-none"
                 >
                   <option value="">Select a category</option>
                   {categories.map(cat => (
@@ -160,28 +207,16 @@ const AddProduct: React.FC = () => {
                   ))}
                 </select>
               </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2">Description</label>
-                <textarea 
-                  name="description"
-                  required 
-                  rows={6}
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full bg-slate-800 border border-border rounded-lg p-3 outline-none focus:border-primary transition resize-none"
-                  placeholder="Write a detailed description of the product..."
-                />
-              </div>
             </div>
           </form>
         </div>
 
-        <div className="space-y-6">
-          <div className="card">
-            <h3 className="text-lg font-bold mb-4">Product Image</h3>
+        {/* Sidebar Controls */}
+        <div className="space-y-8">
+          <div className="card p-8 space-y-6">
+            <h3 className="font-bold uppercase tracking-widest text-xs text-primary border-b border-border pb-4">Product Visuals</h3>
             <div 
-              className="border-2 border-dashed border-border rounded-xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group hover:border-primary transition cursor-pointer"
+              className="border-2 border-dashed border-border rounded-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group hover:border-primary transition-all cursor-pointer bg-main/50"
               onClick={() => document.getElementById('image-upload')?.click()}
             >
               {imagePreview ? (
@@ -192,11 +227,13 @@ const AddProduct: React.FC = () => {
                   </div>
                 </>
               ) : (
-                <>
-                  <Upload className="text-muted mb-4" size={48} />
-                  <p className="text-muted text-sm font-medium">Click to upload image</p>
-                  <p className="text-muted text-xs mt-1">PNG, JPG, GIF up to 10MB</p>
-                </>
+                <div className="flex flex-col items-center text-center p-6">
+                  <div className="p-4 bg-primary-light text-primary rounded-full mb-4">
+                    <Upload size={32} />
+                  </div>
+                  <p className="text-muted text-sm font-bold">Upload Product Image</p>
+                  <p className="text-muted text-[10px] mt-1">High resolution PNG or JPG recommended</p>
+                </div>
               )}
               <input 
                 id="image-upload" 
@@ -208,15 +245,23 @@ const AddProduct: React.FC = () => {
             </div>
           </div>
 
-          <button 
-            form="product-form"
-            type="submit" 
-            disabled={loading}
-            className="btn btn-primary w-full py-4 text-lg justify-center shadow-lg shadow-primary/20"
-          >
-            <Save size={20} />
-            {loading ? 'Saving Product...' : isEdit ? 'Update Product' : 'Publish Product'}
-          </button>
+          <div className="space-y-4">
+            <button 
+              form="product-form"
+              type="submit" 
+              disabled={loading}
+              className="btn btn-primary w-full py-5 text-xl font-black gap-3 shadow-xl shadow-primary/20"
+            >
+              <Save size={24} />
+              {loading ? 'Processing...' : isEdit ? 'Update Listing' : 'Publish Product'}
+            </button>
+            <Link 
+              to="/admin"
+              className="btn btn-outline w-full py-4 text-muted hover:text-danger hover:border-danger transition"
+            >
+              Cancel Changes
+            </Link>
+          </div>
         </div>
       </div>
     </div>
