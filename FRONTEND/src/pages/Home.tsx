@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { ShoppingCart, Eye, ArrowRight, Star, Zap, ShieldCheck, TrendingUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Skeleton from '../components/UI/Skeleton';
 import Button from '../components/UI/Button';
@@ -29,6 +29,7 @@ const Home: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +61,18 @@ const Home: React.FC = () => {
 
   const handleCategoryFilter = (category: string) => {
     setSelectedCategory(category);
+  };
+
+  const handleProductClick = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const handleAddToCart = async (productId: string) => {
+    try {
+      await addToCart(productId, 1);
+    } catch (err) {
+      console.error('Failed to add to cart:', err);
+    }
   };
 
   return (
@@ -161,17 +174,17 @@ const Home: React.FC = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {loading ? (
             [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <Card key={i} className="p-0 flex flex-col h-full overflow-hidden">
                 <Skeleton className="aspect-[4/5] w-full rounded-none" />
-                <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                  <Skeleton className="h-5 sm:h-6 w-3/4" />
+                <div className="p-5 sm:p-6 space-y-3 sm:space-y-4 bg-white dark:bg-slate-900">
+                  <Skeleton className="h-4 sm:h-5 w-3/4" />
                   <Skeleton className="h-3 sm:h-4 w-1/4" />
                   <div className="flex justify-between items-center pt-2">
-                    <Skeleton className="h-9 sm:h-10 w-20 sm:w-24 rounded-lg" />
-                    <Skeleton className="h-9 sm:h-10 w-9 sm:w-10 rounded-full" />
+                    <Skeleton className="h-8 sm:h-9 w-16 sm:w-20 rounded-lg" />
+                    <Skeleton className="h-8 sm:h-9 w-8 sm:w-9 rounded-full" />
                   </div>
                 </div>
               </Card>
@@ -181,10 +194,11 @@ const Home: React.FC = () => {
               <Card 
                 key={product.id} 
                 hoverable
-                className="group p-0 flex flex-col h-full overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-primary/20"
+                className="group p-0 flex flex-col h-full overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
+                onClick={() => handleProductClick(product.id)}
               >
                 {/* Product Image */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-slate-800">
+                <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900">
                   {product.image_url ? (
                     <img 
                       src={`http://localhost:5000${product.image_url}`} 
@@ -192,56 +206,86 @@ const Home: React.FC = () => {
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-text-muted">
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">
                       <ShoppingCart size={40} strokeWidth={1} />
                     </div>
                   )}
 
                   {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4 sm:p-6">
-                    <Link 
-                      to={`/product/${product.id}`} 
-                      className="w-full"
-                    >
-                      <Button variant="primary" size="md" className="w-full gap-2">
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center p-6">
+                    <div className="w-full space-y-3">
+                      <Button 
+                        variant="primary" 
+                        size="md" 
+                        className="w-full gap-2 backdrop-blur-sm bg-white/90 text-slate-900 hover:bg-white border border-white/20"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProductClick(product.id);
+                        }}
+                      >
                         <Eye size={18} /> Quick View
                       </Button>
-                    </Link>
+                    </div>
                   </div>
 
                   {/* Category Badge */}
-                  <div className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-primary shadow-sm">
+                  <div className="absolute top-3 sm:top-4 left-3 sm:left-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary shadow-lg border border-white/20">
                     {product.category_name}
+                  </div>
+
+                  {/* Quick Add Button - Always visible on hover */}
+                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
+                    <Button 
+                      variant="primary"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product.id);
+                      }}
+                      className="rounded-full p-2.5 bg-white/90 hover:bg-white text-primary shadow-lg border border-white/20"
+                      title="Add to cart"
+                    >
+                      <ShoppingCart size={16} />
+                    </Button>
                   </div>
                 </div>
                 
                 {/* Product Info */}
-                <div className="p-6 sm:p-8 flex-grow flex flex-col">
+                <div className="p-5 sm:p-6 flex-grow flex flex-col bg-white dark:bg-slate-900">
                   {/* Name */}
-                  <h3 className="text-lg sm:text-xl font-bold line-clamp-1 group-hover:text-primary transition-colors mb-4">
+                  <h3 className="text-base sm:text-lg font-bold line-clamp-2 group-hover:text-primary transition-colors mb-3 leading-tight">
                     {product.name}
                   </h3>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mb-6">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} size={14} className="fill-warning text-warning flex-shrink-0" />
-                    ))}
-                    <span className="text-[10px] font-black text-text-muted ml-1 sm:ml-2">4.8</span>
+                  <div className="flex items-center gap-1 mb-4">
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} size={12} className="fill-warning text-warning flex-shrink-0" />
+                      ))}
+                    </div>
+                    <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 ml-1">4.8</span>
                   </div>
 
                   {/* Price & Add to Cart */}
-                  <div className="mt-auto flex items-center justify-between gap-2">
-                    <p className="text-xl sm:text-2xl font-black text-primary">
-                      ${Number(product.price).toFixed(2)}
-                    </p>
-                    <button 
-                      onClick={() => addToCart(product.id, 1)}
-                      className="p-2.5 sm:p-3 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-primary hover:text-white hover:scale-110 hover:rotate-12 transition-all duration-300 group/btn flex-shrink-0 active:scale-95 active:rotate-0"
-                      title="Add to cart"
+                  <div className="mt-auto flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-lg sm:text-xl font-black text-primary leading-tight">
+                        ${Number(product.price).toFixed(2)}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-through">${(Number(product.price) * 1.2).toFixed(2)}</p>
+                    </div>
+                    <Button 
+                      variant="primary"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product.id);
+                      }}
+                      className="gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider flex-shrink-0 shadow-md hover:shadow-lg"
                     >
-                      <ShoppingCart size={20} className="group-hover/btn:animate-bounce transition-all duration-300" />
-                    </button>
+                      <ShoppingCart size={14} /> Add
+                    </Button>
                   </div>
                 </div>
               </Card>
