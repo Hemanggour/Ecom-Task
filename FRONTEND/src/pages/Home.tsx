@@ -128,9 +128,9 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Products Section */}
-      <section className="container py-12 sm:py-16 md:py-24" id="products">
+      <section className="container py-16 sm:py-20 md:py-24" id="products">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 sm:gap-6 mb-12 md:mb-16">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 sm:gap-6 mb-16 md:mb-20">
           <div>
             <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-2 sm:mb-4">Curated Selection</h2>
             <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase">Featured Drops</h3>
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           {loading ? (
             [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <Card key={i} className="p-0 flex flex-col h-full overflow-hidden">
@@ -216,14 +216,14 @@ const Home: React.FC = () => {
                 </div>
                 
                 {/* Product Info */}
-                <div className="p-4 sm:p-6 flex-grow flex flex-col">
+                <div className="p-6 sm:p-8 flex-grow flex flex-col">
                   {/* Name */}
-                  <h3 className="text-lg sm:text-xl font-bold line-clamp-1 group-hover:text-primary transition-colors mb-2 sm:mb-3">
+                  <h3 className="text-lg sm:text-xl font-bold line-clamp-1 group-hover:text-primary transition-colors mb-4">
                     {product.name}
                   </h3>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3 sm:mb-4">
+                  <div className="flex items-center gap-1 mb-6">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star key={s} size={14} className="fill-warning text-warning flex-shrink-0" />
                     ))}

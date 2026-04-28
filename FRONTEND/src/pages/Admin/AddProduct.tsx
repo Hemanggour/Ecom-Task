@@ -93,24 +93,24 @@ const AddProduct: React.FC = () => {
         <ArrowLeft size={20} /> Back to Inventory
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
         <div>
           <h1 className="text-4xl font-black tracking-tight">{isEdit ? 'Edit Product' : 'Create Product'}</h1>
           <p className="text-muted font-medium mt-2">Provide the necessary details to {isEdit ? 'update' : 'publish'} your product</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2">
-          <form id="product-form" onSubmit={handleSubmit} className="space-y-8">
+          <form id="product-form" onSubmit={handleSubmit} className="space-y-12">
             {/* General Info Card */}
-            <div className="card p-8 space-y-6">
-              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+            <div className="card p-8 space-y-8" style={{ marginBottom: '5vh' }}>
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-8">
                 <Info size={20} />
                 <h3 className="font-bold uppercase tracking-widest text-xs">General Information</h3>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-8">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-muted ml-1">Product Name</label>
                   <div className="relative">
@@ -143,13 +143,13 @@ const AddProduct: React.FC = () => {
             </div>
 
             {/* Pricing & Stock Card */}
-            <div className="card p-8 space-y-6">
-              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+            <div className="card p-8 space-y-8" style={{ marginBottom: '5vh' }}>
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-8">
                 <DollarSign size={20} />
                 <h3 className="font-bold uppercase tracking-widest text-xs">Pricing & Inventory</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-muted ml-1">Base Price ($)</label>
                   <div className="relative">
@@ -186,13 +186,13 @@ const AddProduct: React.FC = () => {
             </div>
 
             {/* Classification Card */}
-            <div className="card p-8 space-y-6">
-              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-4">
+            <div className="card p-8 space-y-8" style={{ marginBottom: '5vh' }}>
+              <div className="flex items-center gap-2 text-primary border-b border-border pb-4 mb-8">
                 <Info size={20} />
                 <h3 className="font-bold uppercase tracking-widest text-xs">Classification</h3>
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-6">
                 <label className="text-sm font-bold text-muted ml-1">Category</label>
                 <select 
                   name="category_id"
@@ -212,9 +212,9 @@ const AddProduct: React.FC = () => {
         </div>
 
         {/* Sidebar Controls */}
-        <div className="space-y-8">
-          <div className="card p-8 space-y-6">
-            <h3 className="font-bold uppercase tracking-widest text-xs text-primary border-b border-border pb-4">Product Visuals</h3>
+        <div className="space-y-12">
+          <div className="card p-8 space-y-8" style={{ marginLeft: '2vw' }}>
+            <h3 className="font-bold uppercase tracking-widest text-xs text-primary border-b border-border pb-4 mb-8">Product Visuals</h3>
             <div 
               className="border-2 border-dashed border-border rounded-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group hover:border-primary transition-all cursor-pointer bg-main/50"
               onClick={() => document.getElementById('image-upload')?.click()}
@@ -245,19 +245,21 @@ const AddProduct: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center">
             <button 
               form="product-form"
               type="submit" 
               disabled={loading}
-              className="btn btn-primary w-full py-5 text-xl font-black gap-3 shadow-xl shadow-primary/20"
+              className="btn btn-primary py-3 text-lg font-black gap-2 shadow-lg shadow-primary/20"
+              style={{ width: '15vw', marginTop: '5vh' }}
             >
-              <Save size={24} />
+              <Save size={20} />
               {loading ? 'Processing...' : isEdit ? 'Update Listing' : 'Publish Product'}
             </button>
             <Link 
               to="/admin"
-              className="btn btn-outline w-full py-4 text-muted hover:text-danger hover:border-danger transition"
+              className="btn btn-outline py-2 text-muted hover:text-danger hover:border-danger transition"
+              style={{ width: '15vw' }}
             >
               Cancel Changes
             </Link>

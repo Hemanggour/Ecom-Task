@@ -63,7 +63,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Stats Quick View */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
         <div className="card p-6 border-2 border-primary-10">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-primary-light text-primary rounded-xl"><Package size={24} /></div>
@@ -85,7 +85,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="card p-0 overflow-hidden border-border shadow-xl">
+      <div className="card p-0 overflow-hidden border-border shadow-xl mt-8">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -165,13 +165,13 @@ const AdminDashboard: React.FC = () => {
               {!loading && products.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-8 py-32 text-center">
-                    <div className="flex flex-col items-center gap-4 text-muted">
-                      <Package size={64} strokeWidth={1} />
-                      <div>
+                    <div className="space-y-8">
+                <Package size={64} strokeWidth={1} />
+                <div className="space-y-2">
                         <p className="text-xl font-bold text-main">No products found</p>
                         <p className="text-sm">Ready to stock your shelves? Add your first product now!</p>
                       </div>
-                      <Link to="/admin/add-product" className="btn btn-primary mt-4 py-3 px-8">
+                      <Link to="/admin/add-product" className="btn btn-primary mt-6 py-3 px-8">
                         Add New Product
                       </Link>
                     </div>

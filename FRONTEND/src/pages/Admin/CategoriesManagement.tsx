@@ -99,14 +99,14 @@ const CategoriesManagement: React.FC = () => {
         <ArrowLeft size={20} /> Back to Inventory
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
         <div>
           <h1 className="text-4xl font-black tracking-tight mb-2">Category Taxonomy</h1>
           <p className="text-muted font-medium">Organize your product hierarchy and navigation</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
         {/* Creation Form */}
         <div className="lg:col-span-1">
           <div className="card p-8 border-2 border-primary-10 shadow-xl sticky top-32">
@@ -115,8 +115,8 @@ const CategoriesManagement: React.FC = () => {
               <h2 className="text-xl font-black tracking-tight">New Category</h2>
             </div>
             
-            <form onSubmit={handleAddCategory} className="space-y-6">
-              <div className="space-y-2">
+            <form onSubmit={handleAddCategory} className="space-y-8">
+              <div className="space-y-4">
                 <label className="text-sm font-bold text-muted ml-1 uppercase tracking-widest text-xs">Name</label>
                 <div className="relative">
                   <input 
@@ -131,7 +131,7 @@ const CategoriesManagement: React.FC = () => {
                 </div>
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <label className="text-sm font-bold text-muted ml-1 uppercase tracking-widest text-xs">Description</label>
                 <textarea 
                   rows={4}
@@ -145,7 +145,7 @@ const CategoriesManagement: React.FC = () => {
               <button 
                 type="submit" 
                 disabled={adding}
-                className="btn btn-primary w-full py-4 text-lg font-black gap-3 shadow-lg shadow-primary-20 mt-4"
+                className="btn btn-primary w-full py-4 text-lg font-black gap-3 shadow-lg shadow-primary-20 mt-8"
               >
                 {adding ? 'Processing...' : 'Create Category'} <Plus size={20} />
               </button>
@@ -155,7 +155,7 @@ const CategoriesManagement: React.FC = () => {
 
         {/* Categories Table */}
         <div className="lg:col-span-2">
-          <div className="card p-0 overflow-hidden border-border shadow-xl">
+          <div className="card p-0 overflow-hidden border-border shadow-xl mt-12" style={{ marginLeft: '2vw' }}>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-main opacity-50 border-b border-border">
@@ -209,9 +209,9 @@ const CategoriesManagement: React.FC = () => {
                 {!loading && categories.length === 0 && (
                   <tr>
                     <td colSpan={3} className="px-8 py-32 text-center">
-                      <div className="flex flex-col items-center gap-4 text-muted">
+                      <div className="flex flex-col items-center gap-8 text-muted">
                         <Info size={64} strokeWidth={1} />
-                        <div>
+                        <div className="space-y-2">
                           <p className="text-xl font-bold text-main">No categories found</p>
                           <p className="text-sm">Start by creating your first category to organize products.</p>
                         </div>
@@ -229,7 +229,7 @@ const CategoriesManagement: React.FC = () => {
       {editingCategory && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="card p-8 max-w-md w-full mx-4 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black">Edit Category</h2>
               <button 
                 onClick={handleCancelEdit}
@@ -239,8 +239,8 @@ const CategoriesManagement: React.FC = () => {
               </button>
             </div>
             
-            <form onSubmit={handleUpdate} className="space-y-6">
-              <div className="space-y-2">
+            <form onSubmit={handleUpdate} className="space-y-8">
+              <div className="space-y-4">
                 <label className="text-sm font-bold text-muted ml-1 uppercase tracking-widest text-xs">Name</label>
                 <input 
                   type="text" 
@@ -263,7 +263,7 @@ const CategoriesManagement: React.FC = () => {
                 />
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex gap-4 pt-8">
                 <button 
                   type="button"
                   onClick={handleCancelEdit}

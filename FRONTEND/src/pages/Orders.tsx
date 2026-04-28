@@ -105,7 +105,7 @@ const Orders: React.FC = () => {
         <ArrowLeft size={20} /> Back to Home
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
         <div>
           <h1 className="text-4xl font-black tracking-tight mb-2">My Orders</h1>
           <p className="text-muted font-medium">Track and manage your orders</p>
@@ -113,7 +113,7 @@ const Orders: React.FC = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
         <div className="card p-6 border-2 border-primary-10">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-primary-light text-primary rounded-xl"><ShoppingBag size={24} /></div>
@@ -153,7 +153,7 @@ const Orders: React.FC = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="card p-0 overflow-hidden border-border shadow-xl">
+      <div className="card p-0 overflow-hidden border-border shadow-xl mt-8">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -203,13 +203,13 @@ const Orders: React.FC = () => {
               {!loading && orders.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-8 py-32 text-center">
-                    <div className="flex flex-col items-center gap-4 text-muted">
+                    <div className="flex flex-col items-center gap-8 text-muted">
                       <ShoppingBag size={64} strokeWidth={1} />
-                      <div>
+                      <div className="space-y-2">
                         <p className="text-xl font-bold text-main">No orders found</p>
                         <p className="text-sm">Your orders will appear here after you make purchases.</p>
                       </div>
-                      <Link to="/" className="btn btn-primary mt-4 py-3 px-8">
+                      <Link to="/" className="btn btn-primary mt-6 py-3 px-8">
                         Start Shopping
                       </Link>
                     </div>
@@ -225,58 +225,60 @@ const Orders: React.FC = () => {
       {showDetails && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="card p-8 max-w-2xl w-full mx-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-black">Order #{selectedOrder.id.slice(0, 8)}</h2>
-              <button 
-                onClick={() => setShowDetails(false)}
-                className="p-2 hover:bg-main rounded-lg transition"
-              >
-                <XCircle size={24} />
-              </button>
-            </div>
+            <div className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-black">Order #{selectedOrder.id.slice(0, 8)}</h2>
+                <button 
+                  onClick={() => setShowDetails(false)}
+                  className="p-2 hover:bg-main rounded-lg transition"
+                >
+                  <XCircle size={24} />
+                </button>
+              </div>
 
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Order Date</p>
-                  <p className="font-medium">{formatDate(selectedOrder.created_at)}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Status</p>
-                  <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${getStatusColor(selectedOrder.status)}`}>
-                    {getStatusIcon(selectedOrder.status)}
-                    <span className="text-xs font-bold uppercase">{selectedOrder.status}</span>
+              <div className="space-y-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Order Date</p>
+                    <p className="font-medium">{formatDate(selectedOrder.created_at)}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Status</p>
+                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${getStatusColor(selectedOrder.status)}`}>
+                      {getStatusIcon(selectedOrder.status)}
+                      <span className="text-xs font-bold uppercase">{selectedOrder.status}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Shipping Address</p>
-                <p className="font-medium text-sm">{selectedOrder.shipping_address}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted uppercase tracking-widest mb-3">Order Items</p>
-                <div className="space-y-3">
-                  {selectedOrder.items?.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 bg-main opacity-30 rounded-xl">
-                      <div className="h-16 w-16 rounded-lg bg-primary-light flex items-center justify-center text-primary">
-                        <Package size={24} />
-                      </div>
-                      <div className="flex-grow">
-                        <p className="font-bold">{item.name}</p>
-                        <p className="text-sm text-muted">Qty: {item.quantity} × ${Number(item.price).toFixed(2)}</p>
-                      </div>
-                      <p className="font-black text-lg">${(item.quantity * item.price).toFixed(2)}</p>
-                    </div>
-                  ))}
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-2">Shipping Address</p>
+                  <p className="font-medium text-sm">{selectedOrder.shipping_address}</p>
                 </div>
-              </div>
 
-              <div className="border-t border-border pt-4">
-                <div className="flex justify-between items-center">
-                  <p className="text-xl font-bold">Total</p>
-                  <p className="text-2xl font-black">${Number(selectedOrder.total_amount).toFixed(2)}</p>
+                <div className="space-y-4">
+                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-4">Order Items</p>
+                  <div className="space-y-3">
+                    {selectedOrder.items?.map((item) => (
+                      <div key={item.id} className="flex items-center gap-4 p-4 bg-main opacity-30 rounded-xl">
+                        <div className="h-16 w-16 rounded-lg bg-primary-light flex items-center justify-center text-primary">
+                          <Package size={24} />
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-bold">{item.name}</p>
+                          <p className="text-sm text-muted">Qty: {item.quantity} × ${Number(item.price).toFixed(2)}</p>
+                        </div>
+                        <p className="font-black text-lg">${(item.quantity * item.price).toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-border pt-8">
+                  <div className="flex justify-between items-center">
+                    <p className="text-xl font-bold">Total</p>
+                    <p className="text-2xl font-black">${Number(selectedOrder.total_amount).toFixed(2)}</p>
+                  </div>
                 </div>
               </div>
             </div>
