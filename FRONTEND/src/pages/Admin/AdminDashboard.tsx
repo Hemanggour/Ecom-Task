@@ -50,14 +50,14 @@ const AdminDashboard: React.FC = () => {
           <p className="text-muted font-medium">Control your catalog, stock levels, and product details</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <Link to="/admin/categories" className="btn btn-outline flex-grow md:flex-grow-0 py-3">
-            <LayoutGrid size={18} /> Categories
+          <Link to="/admin/categories" className="inline-flex items-center gap-2 px-4 py-2.5 bg-main border border-border rounded-xl text-muted hover:border-primary hover:text-primary hover:bg-primary/10 transition-all font-medium text-sm">
+            <LayoutGrid size={16} /> Categories
           </Link>
-          <Link to="/admin/orders" className="btn btn-outline flex-grow md:flex-grow-0 py-3">
-            <ShoppingBag size={18} /> Orders
+          <Link to="/admin/orders" className="inline-flex items-center gap-2 px-4 py-2.5 bg-main border border-border rounded-xl text-muted hover:border-primary hover:text-primary hover:bg-primary/10 transition-all font-medium text-sm">
+            <ShoppingBag size={16} /> Orders
           </Link>
-          <Link to="/admin/add-product" className="btn btn-primary flex-grow md:flex-grow-0 py-3 shadow-lg shadow-primary-20">
-            <Plus size={20} /> Add Product
+          <Link to="/admin/add-product" className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all font-medium text-sm shadow-lg shadow-primary-20">
+            <Plus size={18} /> Add Product
           </Link>
         </div>
       </div>
@@ -66,7 +66,7 @@ const AdminDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <div className="card p-6 border-2 border-primary-10">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary-light text-primary rounded-2xl"><Package size={24} /></div>
+            <div className="p-3 bg-primary-light text-primary rounded-xl"><Package size={24} /></div>
             <div>
               <p className="text-xs font-bold text-muted uppercase tracking-widest">Total Products</p>
               <h4 className="text-2xl font-black">{products.length}</h4>
@@ -75,7 +75,7 @@ const AdminDashboard: React.FC = () => {
         </div>
         <div className="card p-6 border-2 border-secondary-10">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-secondary-10 text-secondary rounded-2xl"><Box size={24} /></div>
+            <div className="p-3 bg-secondary-10 text-secondary rounded-xl"><Box size={24} /></div>
             <div>
               <p className="text-xs font-bold text-muted uppercase tracking-widest">Total Items</p>
               <h4 className="text-2xl font-black">{products.reduce((acc, curr) => acc + (curr.stock || 0), 0)}</h4>
@@ -118,7 +118,7 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-8 py-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-main border border-border rounded-full">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-main border border-border rounded-lg">
                       <Tag size={12} className="text-primary" />
                       <span className="text-xs font-bold text-muted">{product.category_name}</span>
                     </div>

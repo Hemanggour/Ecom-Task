@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api/axios';
+import api from '../api/axios';
 import { ShoppingBag, Package, ArrowLeft, Eye, CheckCircle, Clock, XCircle, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ interface Order {
   items?: OrderItem[];
 }
 
-const OrdersManagement: React.FC = () => {
+const Orders: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -52,18 +52,6 @@ const OrdersManagement: React.FC = () => {
       setShowDetails(true);
     } catch (err) {
       console.error('Failed to fetch order details', err);
-    }
-  };
-
-  const handleUpdateStatus = async (orderId: string, status: string) => {
-    try {
-      await api.put(`/orders/${orderId}/status`, { status });
-      setOrders(orders.map(o => o.id === orderId ? { ...o, status } : o));
-      if (selectedOrder && selectedOrder.id === orderId) {
-        setSelectedOrder({ ...selectedOrder, status });
-      }
-    } catch (err) {
-      alert('Failed to update order status');
     }
   };
 
@@ -113,14 +101,14 @@ const OrdersManagement: React.FC = () => {
 
   return (
     <div className="container py-12 animate-fade-in">
-      <Link to="/admin" className="flex items-center gap-2 text-muted hover:text-primary transition mb-8 font-medium">
-        <ArrowLeft size={20} /> Back to Dashboard
+      <Link to="/" className="flex items-center gap-2 text-muted hover:text-primary transition mb-8 font-medium">
+        <ArrowLeft size={20} /> Back to Home
       </Link>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
         <div>
-          <h1 className="text-4xl font-black tracking-tight mb-2">Orders Management</h1>
-          <p className="text-muted font-medium">Track and manage all customer orders</p>
+          <h1 className="text-4xl font-black tracking-tight mb-2">My Orders</h1>
+          <p className="text-muted font-medium">Track and manage your orders</p>
         </div>
       </div>
 
@@ -171,7 +159,6 @@ const OrdersManagement: React.FC = () => {
             <thead>
               <tr className="bg-main opacity-50 border-b border-border">
                 <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-muted">Order ID</th>
-                <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-muted">Customer</th>
                 <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-muted">Date</th>
                 <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-muted">Total</th>
                 <th className="px-8 py-5 text-xs font-black uppercase tracking-widest text-muted">Status</th>
@@ -182,16 +169,13 @@ const OrdersManagement: React.FC = () => {
               {loading ? (
                 [1, 2, 3].map(i => (
                   <tr key={i} className="animate-pulse">
-                    <td colSpan={6} className="px-8 py-10 h-20 bg-main opacity-20"></td>
+                    <td colSpan={5} className="px-8 py-10 h-20 bg-main opacity-20"></td>
                   </tr>
                 ))
               ) : orders.map((order) => (
                 <tr key={order.id} className="hover:bg-primary-light opacity-30 transition-colors group">
                   <td className="px-8 py-6">
                     <span className="font-bold text-lg">#{order.id.slice(0, 8)}</span>
-                  </td>
-                  <td className="px-8 py-6">
-                    <span className="font-medium">{order.user_name || 'Unknown'}</span>
                   </td>
                   <td className="px-8 py-6">
                     <span className="text-muted text-sm">{formatDate(order.created_at)}</span>
@@ -218,13 +202,16 @@ const OrdersManagement: React.FC = () => {
               ))}
               {!loading && orders.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-8 py-32 text-center">
+                  <td colSpan={5} className="px-8 py-32 text-center">
                     <div className="flex flex-col items-center gap-4 text-muted">
                       <ShoppingBag size={64} strokeWidth={1} />
                       <div>
                         <p className="text-xl font-bold text-main">No orders found</p>
-                        <p className="text-sm">Orders will appear here when customers make purchases.</p>
+                        <p className="text-sm">Your orders will appear here after you make purchases.</p>
                       </div>
+                      <Link to="/" className="btn btn-primary mt-4 py-3 px-8">
+                        Start Shopping
+                      </Link>
                     </div>
                   </td>
                 </tr>
@@ -251,37 +238,21 @@ const OrdersManagement: React.FC = () => {
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Customer</p>
-                  <p className="font-medium">{selectedOrder.user_name || 'Unknown'}</p>
-                </div>
-                <div>
                   <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Order Date</p>
                   <p className="font-medium">{formatDate(selectedOrder.created_at)}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Status</p>
+                  <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${getStatusColor(selectedOrder.status)}`}>
+                    {getStatusIcon(selectedOrder.status)}
+                    <span className="text-xs font-bold uppercase">{selectedOrder.status}</span>
+                  </div>
                 </div>
               </div>
 
               <div>
                 <p className="text-xs font-bold text-muted uppercase tracking-widest mb-1">Shipping Address</p>
                 <p className="font-medium text-sm">{selectedOrder.shipping_address}</p>
-              </div>
-
-              <div>
-                <p className="text-xs font-bold text-muted uppercase tracking-widest mb-3">Status</p>
-                <div className="flex flex-wrap gap-2">
-                  {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => handleUpdateStatus(selectedOrder.id, status)}
-                      className={`px-4 py-2 rounded-lg border font-bold text-sm uppercase transition-all ${
-                        selectedOrder.status.toLowerCase() === status
-                          ? getStatusColor(status)
-                          : 'bg-main text-muted border-border hover:border-primary hover:text-primary'
-                      }`}
-                    >
-                      {status}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               <div>
@@ -316,4 +287,4 @@ const OrdersManagement: React.FC = () => {
   );
 };
 
-export default OrdersManagement;
+export default Orders;

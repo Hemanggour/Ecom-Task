@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductDetail from './pages/ProductDetail';
+import Orders from './pages/Orders';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 
@@ -38,6 +39,11 @@ const App: React.FC = () => {
                 <Route path="/checkout" element={
                   <ProtectedRoute>
                     <Checkout />
+                  </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                  <ProtectedRoute>
+                    <Orders />
                   </ProtectedRoute>
                 } />
                 

@@ -16,24 +16,51 @@ interface Product {
   category_name: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+}
+
 const Home: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.get('/products');
-        setProducts(res.data);
+        const [productsRes, categoriesRes] = await Promise.all([
+          api.get('/products'),
+          api.get('/categories')
+        ]);
+        setProducts(productsRes.data);
+        setCategories(categoriesRes.data);
       } catch (err) {
-        console.error('Failed to fetch products', err);
+        console.error('Failed to fetch data', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(product => 
+        product.category_name?.toLowerCase() === selectedCategory.toLowerCase()
+      ));
+    }
+  }, [selectedCategory, products]);
+
+  const handleCategoryFilter = (category: string) => {
+    setSelectedCategory(category);
+  };
 
   return (
     <div className="animate-fade-in pb-20">
@@ -111,9 +138,25 @@ const Home: React.FC = () => {
           
           {/* Category Filters */}
           <div className="flex gap-2 flex-wrap sm:flex-nowrap overflow-x-auto pb-2 sm:pb-0">
-            <Button variant="outline" size="sm" className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0">All</Button>
-            <Button variant="outline" size="sm" className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0">Tech</Button>
-            <Button variant="outline" size="sm" className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0">Life</Button>
+            <Button 
+              variant={selectedCategory === 'all' ? 'primary' : 'outline'} 
+              size="sm" 
+              onClick={() => handleCategoryFilter('all')}
+              className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0"
+            >
+              All
+            </Button>
+            {categories.map((category) => (
+              <Button 
+                key={category.id}
+                variant={selectedCategory === category.name.toLowerCase() ? 'primary' : 'outline'} 
+                size="sm" 
+                onClick={() => handleCategoryFilter(category.name.toLowerCase())}
+                className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0"
+              >
+                {category.name}
+              </Button>
+            ))}
           </div>
         </div>
 
@@ -134,7 +177,7 @@ const Home: React.FC = () => {
               </Card>
             ))
           ) : (
-            products.map((product) => (
+            filteredProducts.map((product) => (
               <Card 
                 key={product.id} 
                 hoverable
@@ -194,10 +237,10 @@ const Home: React.FC = () => {
                     </p>
                     <button 
                       onClick={() => addToCart(product.id, 1)}
-                      className="p-2.5 sm:p-3 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-primary hover:text-white transition-all duration-200 group/btn flex-shrink-0"
+                      className="p-2.5 sm:p-3 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-primary hover:text-white hover:scale-110 hover:rotate-12 transition-all duration-300 group/btn flex-shrink-0 active:scale-95 active:rotate-0"
                       title="Add to cart"
                     >
-                      <ShoppingCart size={20} className="group-hover/btn:scale-110 transition-transform" />
+                      <ShoppingCart size={20} className="group-hover/btn:animate-bounce transition-all duration-300" />
                     </button>
                   </div>
                 </div>

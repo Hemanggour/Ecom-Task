@@ -19,6 +19,19 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  const handleOrdersClick = () => {
+    if (user?.role === 'admin') {
+      navigate('/admin/orders');
+    } else {
+      navigate('/orders');
+    }
+  };
+
+  const handleMobileOrdersClick = () => {
+    handleOrdersClick();
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="glass sticky top-0 z-50 py-4 transition-all duration-300 border-b border-border/30">
       <div className="container flex justify-between items-center">
@@ -46,20 +59,24 @@ const Navbar: React.FC = () => {
 
             {user && (
               <>
-                {/* Cart Link */}
-                <Link to="/cart" className="relative p-2.5 rounded-full hover:bg-primary/10 transition duration-200 text-text-muted hover:text-primary" title="Shopping Cart">
-                  <ShoppingCart size={20} />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-secondary text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full animate-bounce">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
+                {/* Cart Link - Only for non-admin users */}
+                {user.role !== 'admin' && (
+                  <Link to="/cart" className="relative p-2.5 rounded-full hover:bg-primary/10 transition duration-200 text-text-muted hover:text-primary" title="Shopping Cart">
+                    <ShoppingCart size={20} />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-secondary h-2 w-2 rounded-full animate-pulse"></span>
+                    )}
+                  </Link>
+                )}
 
-                {/* Orders Link */}
-                <Link to="/orders" className="p-2.5 rounded-full hover:bg-primary/10 transition duration-200 text-text-muted hover:text-primary" title="My Orders">
+                {/* Orders Link - Click handler for role-based redirect */}
+                <button 
+                  onClick={handleOrdersClick}
+                  className="p-2.5 rounded-full hover:bg-primary/10 transition duration-200 text-text-muted hover:text-primary" 
+                  title={user.role === 'admin' ? 'Admin Orders' : 'My Orders'}
+                >
                   <Package size={20} />
-                </Link>
+                </button>
               </>
             )}
 
@@ -73,7 +90,7 @@ const Navbar: React.FC = () => {
             {/* User Section */}
             {user ? (
               <div className="flex items-center gap-3 ml-2">
-                <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-full text-primary border border-primary/20">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-lg text-primary border border-primary/20">
                   <User size={16} />
                   <span className="text-xs font-semibold tracking-wide">{user.name.split(' ')[0]}</span>
                 </div>
@@ -133,25 +150,25 @@ const Navbar: React.FC = () => {
               </Link>
               {user && (
                 <>
-                  <Link 
-                    to="/cart" 
-                    onClick={() => setIsMenuOpen(false)} 
-                    className="text-lg font-semibold text-text-main hover:text-primary transition duration-200 flex items-center justify-between"
+                  {/* Cart Link - Only for non-admin users */}
+                  {user.role !== 'admin' && (
+                    <Link 
+                      to="/cart" 
+                      onClick={() => setIsMenuOpen(false)} 
+                      className="text-lg font-semibold text-text-main hover:text-primary transition duration-200 flex items-center justify-between"
+                    >
+                      <span>Cart</span>
+                      {cartCount > 0 && (
+                        <span className="bg-secondary h-2 w-2 rounded-full animate-pulse ml-2"></span>
+                      )}
+                    </Link>
+                  )}
+                  <button 
+                    onClick={handleMobileOrdersClick} 
+                    className="text-lg font-semibold text-text-main hover:text-primary transition duration-200 text-left"
                   >
-                    <span>Cart</span>
-                    {cartCount > 0 && (
-                      <span className="bg-secondary text-white px-2 py-1 rounded-full text-xs font-bold">
-                        {cartCount}
-                      </span>
-                    )}
-                  </Link>
-                  <Link 
-                    to="/orders" 
-                    onClick={() => setIsMenuOpen(false)} 
-                    className="text-lg font-semibold text-text-main hover:text-primary transition duration-200"
-                  >
-                    My Orders
-                  </Link>
+                    {user.role === 'admin' ? 'Admin Orders' : 'My Orders'}
+                  </button>
                 </>
               )}
               {user?.role === 'admin' && (
