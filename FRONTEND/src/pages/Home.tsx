@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { ShoppingCart, Eye, ArrowRight, Star, Zap, ShieldCheck, TrendingUp } from 'lucide-react';
+import { ShoppingCart, Eye, ArrowRight, Star, Zap, ShieldCheck, TrendingUp, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Skeleton from '../components/UI/Skeleton';
 import Button from '../components/UI/Button';
 import Card from '../components/UI/Card';
+import Input from '../components/UI/Input';
 
 interface Product {
   id: string;
@@ -27,6 +28,7 @@ const Home: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -50,17 +52,34 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory === 'all') {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(products.filter(product => 
+    let filtered = products;
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => 
         product.category_name?.toLowerCase() === selectedCategory.toLowerCase()
-      ));
+      );
     }
-  }, [selectedCategory, products]);
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(product => 
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.category_name?.toLowerCase().includes(query)
+      );
+    }
+    
+    setFilteredProducts(filtered);
+  }, [selectedCategory, searchQuery, products]);
 
   const handleCategoryFilter = (category: string) => {
     setSelectedCategory(category);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   const handleProductClick = (productId: string) => {
@@ -143,33 +162,45 @@ const Home: React.FC = () => {
       {/* Featured Products Section */}
       <section className="container py-16 sm:py-20 md:py-24" id="products">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 sm:gap-6 mb-16 md:mb-20">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-6 mb-16 md:mb-20">
           <div>
             <h2 className="text-xs font-black text-primary uppercase tracking-[0.3em] mb-2 sm:mb-4">Curated Selection</h2>
             <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase">Featured Drops</h3>
           </div>
           
-          {/* Category Filters */}
-          <div className="flex gap-2 flex-wrap sm:flex-nowrap overflow-x-auto pb-2 sm:pb-0">
-            <Button 
-              variant={selectedCategory === 'all' ? 'primary' : 'outline'} 
-              size="sm" 
-              onClick={() => handleCategoryFilter('all')}
-              className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0"
-            >
-              All
-            </Button>
-            {categories.map((category) => (
-              <Button 
-                key={category.id}
-                variant={selectedCategory === category.name.toLowerCase() ? 'primary' : 'outline'} 
-                size="sm" 
-                onClick={() => handleCategoryFilter(category.name.toLowerCase())}
-                className="px-4 py-2 text-xs uppercase font-bold tracking-wider flex-shrink-0"
+          {/* Search and Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+            {/* Search Input */}
+            <div className="relative min-w-[200px] sm:min-w-[300px]">
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                icon={<Search size={18} className="text-muted" />}
+                className="pl-12"
+              />
+            </div>
+            
+            {/* Category Filters */}
+            <div className="relative">
+              <select 
+                value={selectedCategory}
+                onChange={(e) => handleCategoryFilter(e.target.value)}
+                className="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 pr-10 text-sm font-medium text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary cursor-pointer hover:border-primary transition-colors"
               >
-                {category.name}
-              </Button>
-            ))}
+                <option value="all">All Categories</option>
+                {categories.map((category) => (
+                  <option 
+                    key={category.id} 
+                    value={category.name.toLowerCase()}
+                    className="text-slate-900 dark:text-slate-100"
+                  >
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -194,7 +225,7 @@ const Home: React.FC = () => {
               <Card 
                 key={product.id} 
                 hoverable
-                className="group p-0 flex flex-col h-full overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
+                className="group p-0 flex flex-col h-full overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer hover:cursor-pointer"
                 onClick={() => handleProductClick(product.id)}
               >
                 {/* Product Image */}

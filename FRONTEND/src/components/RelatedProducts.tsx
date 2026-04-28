@@ -66,7 +66,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({
           <Card 
             key={product.id} 
             hoverable
-            className="group p-0 flex flex-col h-full overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
+            className="group p-0 flex flex-col h-full overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer hover:cursor-pointer"
             onClick={() => handleProductClick(product.id)}
           >
             {/* Product Image */}
