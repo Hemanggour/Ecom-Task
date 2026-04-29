@@ -39,6 +39,33 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/categories/:id
+// @desc    Update a category (Admin only)
+// @access  Private
+router.put('/:id', auth, async (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Access denied' });
+  }
+
+  const { name, description } = req.body;
+
+  try {
+    const result = await db.query(
+      'UPDATE categories SET name = $1, description = $2 WHERE id = $3 RETURNING *',
+      [name, description, req.params.id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // @route   DELETE api/categories/:id
 // @desc    Delete a category
 // @access  Private

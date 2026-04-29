@@ -169,7 +169,7 @@ const Checkout: React.FC = () => {
                 <div key={item.id} className="flex justify-between items-center gap-4">
                   <div className="flex items-center gap-4">
                     <div className="h-16 w-16 rounded-xl bg-main border border-border overflow-hidden flex-shrink-0">
-                      <img src={`http://localhost:5000${item.image_url}`} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}${item.image_url}`} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div>
                       <p className="font-bold text-sm line-clamp-1">{item.name}</p>

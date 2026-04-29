@@ -61,7 +61,7 @@ const Cart: React.FC = () => {
               <div className="h-24 md:h-32 w-24 md:w-32 rounded-lg md:rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-border">
                 {item.image_url ? (
                   <img 
-                    src={`http://localhost:5000${item.image_url}`} 
+                    src={`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}${item.image_url}`} 
                     alt={item.name} 
                     className="w-full h-full object-cover" 
                   />

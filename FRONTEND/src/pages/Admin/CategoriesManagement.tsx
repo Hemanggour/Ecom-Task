@@ -80,8 +80,15 @@ const CategoriesManagement: React.FC = () => {
       setEditingCategory(null);
       setEditName('');
       setEditDescription('');
-    } catch (err) {
-      alert('Failed to update category');
+    } catch (err: any) {
+      console.error('Update error:', err.response?.data || err.message);
+      if (err.response?.status === 401) {
+        alert('Please log in to update categories');
+      } else if (err.response?.status === 403) {
+        alert('Admin access required to update categories');
+      } else {
+        alert('Failed to update category');
+      }
     } finally {
       setUpdating(false);
     }
