@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { ShoppingCart, Eye, ArrowRight, Star, Zap, ShieldCheck, TrendingUp, Search } from 'lucide-react';
+import { ShoppingCart, Eye, ArrowRight, Star, Zap, ShieldCheck, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Skeleton from '../components/UI/Skeleton';
@@ -177,8 +177,6 @@ const Home: React.FC = () => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                icon={<Search size={18} className="text-muted" />}
-                className="pl-12"
               />
             </div>
             
