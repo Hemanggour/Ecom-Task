@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('../db');
 const auth = require('../middleware/auth');
 const upload = require('../utils/multer');
+const cloudinary = require('../utils/cloudinary');
 
 const router = express.Router();
 
@@ -54,14 +55,21 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   }
 
   const { name, description, price, stock, category_id } = req.body;
-  const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+  let image_url = null;
 
   try {
-    const result = await db.query(
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'products'
+      });
+      image_url = result.secure_url;
+    }
+
+    const dbResult = await db.query(
       'INSERT INTO products (name, description, price, stock, category_id, image_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [name, description, price, stock, category_id, image_url]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json(dbResult.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -79,20 +87,23 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
   const { name, description, price, stock, category_id } = req.body;
   let image_url = req.body.image_url;
 
-  if (req.file) {
-    image_url = `/uploads/${req.file.filename}`;
-  }
-
   try {
-    const result = await db.query(
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'products'
+      });
+      image_url = result.secure_url;
+    }
+
+    const dbResult = await db.query(
       'UPDATE products SET name=$1, description=$2, price=$3, stock=$4, category_id=$5, image_url=$6, updated_at=CURRENT_TIMESTAMP WHERE id=$7 RETURNING *',
       [name, description, price, stock, category_id, image_url, req.params.id]
     );
 
-    if (result.rows.length === 0) {
+    if (dbResult.rows.length === 0) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.json(result.rows[0]);
+    res.json(dbResult.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

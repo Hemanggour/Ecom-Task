@@ -73,7 +73,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({
             <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900">
               {product.image_url ? (
                 <img 
-                  src={`http://localhost:5000${product.image_url}`} 
+                  src={product.image_url} 
                   alt={product.name} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 />

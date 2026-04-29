@@ -37,7 +37,7 @@ const AddProduct: React.FC = () => {
             category_id: p.category_id
           });
           if (p.image_url) {
-            setImagePreview(`http://localhost:5000${p.image_url}`);
+            setImagePreview(p.image_url);
           }
         }
       } catch (err) {
