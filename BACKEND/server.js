@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const db = require('./db');
 
 dotenv.config();
 
@@ -14,6 +15,29 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+
+// Health check endpoint (public, no auth required)
+app.get('/api/health', async (req, res) => {
+  try {
+    // Test database connection
+    await db.query('SELECT 1');
+    
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      database: 'connected',
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      database: 'disconnected',
+      error: error.message
+    });
+  }
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
